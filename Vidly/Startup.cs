@@ -38,9 +38,19 @@ namespace Vidly
             }
 
             app.UseStaticFiles();
-
+            
             app.UseMvc(routes =>
             {
+                //better way of doing this in attribute routing because of magic string in controller and action name. If later the Controller
+                // name or action name changes this below routing will break.
+                //routes.MapRoute(
+                //    name: "MovieByReleaseDateRoute",
+                //    template: "{controller=Movies}/{action=Released}/{year}/{month}",
+                //    defaults: null,
+                //    constraints: new {year = @"\d{4}", month = @"\d{2}" } //year="2016|2017" only expose 2016 or 2017
+                //);
+                
+                
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
