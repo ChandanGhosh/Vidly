@@ -1,4 +1,4 @@
-﻿@model Vidly.ViewModels.RandomMovieViewModel
+﻿
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +18,7 @@
     </environment>
 </head>
 <body>
-    @Html.PartialAsync("_NavBar", Model.Movie)
+    @await Html.PartialAsync("_NavBar")
     <div class="container body-content">
         @RenderBody()
         <hr />
