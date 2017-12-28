@@ -1,0 +1,19 @@
+﻿{
+  "name": "Vidly",
+  "short_name": "Vidly",
+  "description": "A small movie renting site.",
+  "icons": [
+    {
+      "src": "/img/video192x192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/video512x512.png",
+      "sizes": "512x512"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/"
+}

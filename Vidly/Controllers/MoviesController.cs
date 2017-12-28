@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GenFu;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Vidly.Models;
 using Vidly.ViewModels;
+using WebEssentials.AspNetCore.Pwa;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,18 +15,25 @@ namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
+        private readonly WebManifest _webManifest;
+
+        public MoviesController(WebManifest webManifest)
+        {
+            _webManifest = webManifest;
+        }
+        
         // GET: /<controller>/
         public IActionResult Random()
         {
-            var movie = new Movie() { Name = "Shrek!" };
+
+            ViewBag.SiteName = _webManifest.Name;
+            ViewBag.Description = _webManifest.Description;
+            
+            var movie = A.New<Movie>();
             var vm = new RandomMovieViewModel()
             {
                 Movie = movie,
-                Customers = new List<Customer>()
-                {
-                    new Customer() {Name = "Customer 1"},
-                    new Customer() {Name = "Customer 2"}
-                }
+                Customers = A.ListOf<Customer>(5)
             };
             return View(vm);
         }
