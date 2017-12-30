@@ -192,6 +192,8 @@ namespace Vidly.Persistance.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("DateOfBirth");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -211,6 +213,19 @@ namespace Vidly.Persistance.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("Vidly.Models.Genre", b =>
+                {
+                    b.Property<byte>("Id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Genres");
+                });
+
             modelBuilder.Entity("Vidly.Models.MembershipType", b =>
                 {
                     b.Property<byte>("Id");
@@ -218,6 +233,8 @@ namespace Vidly.Persistance.Migrations
                     b.Property<byte>("DiscountRate");
 
                     b.Property<byte>("DurationInMonths");
+
+                    b.Property<string>("Name");
 
                     b.Property<short>("SignUpFee");
 
@@ -231,9 +248,21 @@ namespace Vidly.Persistance.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<DateTime>("Created");
+
+                    b.Property<byte>("GenreId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("ReleasedDate");
+
+                    b.Property<int>("Stock");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GenreId");
 
                     b.ToTable("Movies");
                 });
@@ -288,6 +317,14 @@ namespace Vidly.Persistance.Migrations
                     b.HasOne("Vidly.Models.MembershipType", "MembershipType")
                         .WithMany()
                         .HasForeignKey("MembershipTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vidly.Models.Movie", b =>
+                {
+                    b.HasOne("Vidly.Models.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

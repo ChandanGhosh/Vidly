@@ -11,6 +11,7 @@ namespace Vidly.Persistance
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MembershipType> MembershipTypes { get; set; }
+        public DbSet<Genre> Genres { get; set; }
         
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
         {
@@ -23,6 +24,8 @@ namespace Vidly.Persistance
 
             builder.Entity<Customer>().Property(c => c.FirstName).IsRequired().HasMaxLength(255);
             builder.Entity<Customer>().Property(c => c.LastName).IsRequired().HasMaxLength(255);
+            builder.Entity<Genre>().Property(c => c.Name).IsRequired().HasMaxLength(20);
+            builder.Entity<Movie>().Property(c => c.Name).IsRequired().HasMaxLength(255);
 
         }
     }

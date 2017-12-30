@@ -1,20 +1,37 @@
-﻿@model Vidly.ViewModels.RandomMovieViewModel
+﻿@model IEnumerable<Vidly.Models.Movie>
 
 <h1>@ViewBag.SiteName</h1>
 <h3>@ViewBag.Description</h3>
 
 <h2>Movies</h2>
-
-@if (Model.Customers.Count == 0)
+@if (!Model.Any())
 {
-    <text>No one has rented this movie before.</text>
+    <p>We don't have any movies yet.</p>
 }
 else
 {
-    <ul>
-        @foreach (var item in Model.Movies)
+    <table class="table table-striped table-hover table-bordered ">
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Genre</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        @foreach (var movie in Model)
         {
-            <li>@item.Name</li>
+            <tr>
+                <td>
+                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id">
+                        @movie.Name
+                    </a>
+                </td>
+                <td>@movie.Genre.Name</td>
+            </tr>
         }
-    </ul>
+
+
+        </tbody>
+    </table>    
 }
