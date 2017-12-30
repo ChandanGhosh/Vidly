@@ -3,7 +3,7 @@
 <h1>@ViewBag.SiteName</h1>
 <h3>@ViewBag.Description</h3>
 
-<h2>@Model.Movie.Name</h2>
+<h2>Movies</h2>
 
 @if (Model.Customers.Count == 0)
 {
@@ -12,9 +12,9 @@
 else
 {
     <ul>
-        @foreach (var item in Model.Customers)
+        @foreach (var item in Model.Movies)
         {
-            <li>@item.FirstName @item.LastName</li>
+            <li>@item.Name</li>
         }
     </ul>
 }

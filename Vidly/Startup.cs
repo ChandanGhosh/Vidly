@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,8 +30,8 @@ namespace Vidly
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddProgressiveWebApp(new PwaOptions()
             {
-                RoutesToPreCache = "/",
-                Strategy = ServiceWorkerStrategy.CacheFirst
+//                RoutesToPreCache = "/",
+//                Stra
             });
         }
 
