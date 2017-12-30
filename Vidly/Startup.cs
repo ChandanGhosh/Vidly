@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Vidly.Persistance;
 using WebEssentials.AspNetCore.Pwa;
 
 namespace Vidly
@@ -25,16 +24,21 @@ namespace Vidly
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            
-            
+
+            services.AddDbContext<ApplicationDbContext>(dbcontextoptions =>
+            {
+                dbcontextoptions.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+
+
             // The below two lines enable your app to be a PWA!
             // you will also have access to the manifest.json peoperties as well as dependency injected in other
             // areas as ManifestSettings
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddProgressiveWebApp(new PwaOptions()
             {
-                RoutesToPreCache = "/",
-                Strategy = ServiceWorkerStrategy.CacheFirst
+//                RoutesToPreCache = "/",
+//                Stra
             });
         }
 
@@ -52,7 +56,7 @@ namespace Vidly
             }
 
             app.UseStaticFilesWithCache(TimeSpan.FromSeconds(2));
-            
+
             app.UseMvc(routes =>
             {
                 //better way of doing this in attribute routing because of magic string in controller and action name. If later the Controller
@@ -63,8 +67,8 @@ namespace Vidly
                 //    defaults: null,
                 //    constraints: new {year = @"\d{4}", month = @"\d{2}" } //year="2016|2017" only expose 2016 or 2017
                 //);
-                
-                
+
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GenFu;
+﻿using GenFu;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Vidly.Models;
 using Vidly.ViewModels;
 using WebEssentials.AspNetCore.Pwa;
@@ -23,24 +18,20 @@ namespace Vidly.Controllers
         }
         
         // GET: /<controller>/
-        public IActionResult Random()
+        public IActionResult Index()
         {
 
             ViewBag.SiteName = _webManifest.Name;
             ViewBag.Description = _webManifest.Description;
             
-            var movie = A.New<Movie>();
+            var movies = A.ListOf<Movie>(5);
             var vm = new RandomMovieViewModel()
             {
-                Movie = movie,
+                Movies = movies,
                 Customers = A.ListOf<Customer>(5)
             };
             return View(vm);
         }
-        [Route("Movies/Released/{year:maxlength(4)}/{month:maxlength(2):min(1):max(12)}")]
-        public IActionResult Released(int year, int month)
-        {
-            return Content("Released year=" + year + "and month=" + month);
-        }
+        
     }
 }

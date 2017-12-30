@@ -1,5 +1,3 @@
-using System;
-
 namespace Vidly.Models
 {
     public class ErrorViewModel
