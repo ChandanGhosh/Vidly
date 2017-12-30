@@ -192,11 +192,15 @@ namespace Vidly.Persistance.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(255);
 
                     b.Property<bool>("IsSubscribedToNewsletter");
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(255);
 
                     b.Property<byte>("MembershipTypeId");
 

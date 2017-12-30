@@ -17,9 +17,13 @@ namespace Vidly.Persistance
             
         }
 
-//        public static ApplicationDbContext Create()
-//        {
-//            //return new ApplicationDbContext();
-//        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Customer>().Property(c => c.FirstName).IsRequired().HasMaxLength(255);
+            builder.Entity<Customer>().Property(c => c.LastName).IsRequired().HasMaxLength(255);
+
+        }
     }
 }

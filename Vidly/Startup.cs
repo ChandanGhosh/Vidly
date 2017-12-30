@@ -2,19 +2,24 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Vidly.Persistance;
+using Vidly.Services;
 using WebEssentials.AspNetCore.Pwa;
 
 namespace Vidly
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _environment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
+            _environment = environment;
             Configuration = configuration;
         }
 
@@ -23,7 +28,11 @@ namespace Vidly
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            
             services.AddMvc();
+
+            services.AddEnvironmentServiceConfigurations(_environment);
 
             services.AddDbContext<ApplicationDbContext>(dbcontextoptions =>
             {

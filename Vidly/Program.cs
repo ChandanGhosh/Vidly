@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Vidly
@@ -8,6 +9,7 @@ namespace Vidly
         public static void Main(string[] args)
         {
             BuildWebHost(args).Run();
+            
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
