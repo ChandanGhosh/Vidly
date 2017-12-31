@@ -1,9 +1,11 @@
 ﻿@model IEnumerable<Vidly.Models.Movie>
 
-<h1>@ViewBag.SiteName</h1>
-<h3>@ViewBag.Description</h3>
-
 <h2>Movies</h2>
+
+<a asp-action="New" asp-controller="Movies" class="btn btn-primary">New</a>
+
+<br/>
+
 @if (!Model.Any())
 {
     <p>We don't have any movies yet.</p>
@@ -23,7 +25,7 @@ else
         {
             <tr>
                 <td>
-                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id">
+                    <a asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id">
                         @movie.Name
                     </a>
                 </td>
@@ -33,5 +35,5 @@ else
 
 
         </tbody>
-    </table>    
+    </table>
 }

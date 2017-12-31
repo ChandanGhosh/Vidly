@@ -2,11 +2,13 @@
 @model Vidly.ViewModels.CustomerFormViewModel
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "New Customer";
     Layout = "_Layout";
 }
-<h2>New Customer</h2>
+<h2>Customers form</h2>
+
 <form asp-action="Save" asp-controller="Customers">
+    <div asp-validation-summary="All"></div>
     <div class="form-group">
         <label asp-for="Customer.FirstName">First Name</label>
         <input type="text" class="form-control" asp-for="Customer.FirstName" placeholder="Enter first name">
@@ -17,7 +19,8 @@
     </div>
     <div class="form-group">
         <label asp-for="Customer.DateOfBirth">Date of Birth</label>
-        <input type="text" asp-for="Customer.DateOfBirth" asp-format="{0:d MMM yyyy}" class="form-control" placeholder="Date of birth">
+        <input type="text" asp-for="Customer.DateOfBirth" asp-format="{0:d MMM yyyy}"
+               class="form-control" placeholder="Date of birth">
     </div>
     <div class="form-group">
         <label asp-for="Customer.MembershipTypeId">Membership type</label>

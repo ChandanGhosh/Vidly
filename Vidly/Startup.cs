@@ -35,7 +35,10 @@ namespace Vidly
             services.AddMvc();
 
             services.AddEnvironmentServiceConfigurations(_environment);
-            Mapper.Initialize(config => { config.CreateMap<Customer, Customer>(); });
+            Mapper.Initialize(config => { 
+                config.CreateMap<Customer, Customer>();
+                config.CreateMap<Movie, Movie>();
+            });
 
             services.AddDbContext<ApplicationDbContext>(dbcontextoptions =>
             {
