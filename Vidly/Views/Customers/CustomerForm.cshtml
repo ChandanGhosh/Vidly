@@ -1,0 +1,36 @@
+﻿@using System.Data.Common
+@model Vidly.ViewModels.CustomerFormViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+<h2>New Customer</h2>
+<form asp-action="Save" asp-controller="Customers">
+    <div class="form-group">
+        <label asp-for="Customer.FirstName">First Name</label>
+        <input type="text" class="form-control" asp-for="Customer.FirstName" placeholder="Enter first name">
+    </div>
+    <div class="form-group">
+        <label asp-for="Customer.LastName">LastName</label>
+        <input type="text" asp-for="Customer.LastName" class="form-control" placeholder="Last Name">
+    </div>
+    <div class="form-group">
+        <label asp-for="Customer.DateOfBirth">Date of Birth</label>
+        <input type="text" asp-for="Customer.DateOfBirth" asp-format="{0:d MMM yyyy}" class="form-control" placeholder="Date of birth">
+    </div>
+    <div class="form-group">
+        <label asp-for="Customer.MembershipTypeId">Membership type</label>
+        <select class="form-control" asp-for="Customer.MembershipTypeId"
+                asp-items="@(new SelectList(Model.MembershipTypes, "Id", "Name"))">
+            <option>Select Membership Types</option>
+        </select>
+    </div>
+    <div class="checkbox">
+        <label>
+            <input asp-for="Customer.IsSubscribedToNewsletter" type="checkbox"> Subscribed to Newsletter?
+        </label>
+    </div>
+    <input type="hidden" asp-for="Customer.Id"/>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

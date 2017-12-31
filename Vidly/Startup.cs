@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Vidly.Models;
 using Vidly.Persistance;
 using Vidly.Services;
 using WebEssentials.AspNetCore.Pwa;
@@ -33,6 +35,7 @@ namespace Vidly
             services.AddMvc();
 
             services.AddEnvironmentServiceConfigurations(_environment);
+            Mapper.Initialize(config => { config.CreateMap<Customer, Customer>(); });
 
             services.AddDbContext<ApplicationDbContext>(dbcontextoptions =>
             {

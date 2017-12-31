@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vidly.Models;
 using Vidly.Persistance;
+using Vidly.ViewModels;
 
 namespace Vidly.Controllers
 {
@@ -39,5 +42,57 @@ namespace Vidly.Controllers
 
             return View(customer);
         }
+
+        public IActionResult New()
+        {
+            var membershipTypes = _dbContext.MembershipTypes.ToList();
+            var newCustomerViewModel = new CustomerFormViewModel()
+            {
+                MembershipTypes = membershipTypes
+            };
+
+            return View("CustomerForm", newCustomerViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Save(Customer customer)
+        {
+            if (customer.Id == 0)
+            {
+                // new customer
+                _dbContext.Customers.Add(customer);
+            }
+            else
+            {
+                var cust = _dbContext.Customers.Single(c => c.Id == customer.Id);
+                Mapper.Map(customer, cust);
+                
+            }
+            
+            
+            _dbContext.SaveChanges();
+            
+            return RedirectToAction("Index");
+        }
+
+        
+        public IActionResult Edit(int id)
+        {
+            var customer = _dbContext.Customers.SingleOrDefault(c => c.Id == id);
+
+            if (customer == null) return NotFound();
+
+            var vm = new CustomerFormViewModel()
+            {
+                Customer = customer,
+                MembershipTypes = _dbContext.MembershipTypes.ToList()
+            };
+            
+            return View("CustomerForm", vm);
+
+        }
+
+        
     }
 }
