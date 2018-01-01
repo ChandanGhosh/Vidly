@@ -52,6 +52,9 @@ namespace Vidly
                     .ForAllOtherMembers(memberOptions => memberOptions.Ignore());
                 
                 config.CreateMap<Movie, Movie>();
+
+                config.CreateMap<Movie, MoviesFormViewModel>().ForMember(des => des.Genres, opt => opt.Ignore())
+                    .ReverseMap();
             });
 
             services.AddDbContext<ApplicationDbContext>(dbcontextoptions =>
@@ -64,11 +67,11 @@ namespace Vidly
             // you will also have access to the manifest.json peoperties as well as dependency injected in other
             // areas as ManifestSettings
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddProgressiveWebApp(new PwaOptions()
-            {
-//                RoutesToPreCache = "/",
+//            services.AddProgressiveWebApp(new PwaOptions()
+//            {
+////                RoutesToPreCache = "/",
 //                Stra
-            });
+//            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

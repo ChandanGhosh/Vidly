@@ -36,3 +36,9 @@
     <input type="hidden" asp-for="Id"/>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

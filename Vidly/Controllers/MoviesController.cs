@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using Vidly.Models;
 using Vidly.Persistance;
 using Vidly.ViewModels;
@@ -13,21 +15,20 @@ namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly WebManifest _webManifest;
+        //private readonly WebManifest _webManifest;
         private readonly ApplicationDbContext _applicationDbContext;
+        private static List<Genre> _genres;
 
-        public MoviesController(WebManifest webManifest, ApplicationDbContext applicationDbContext)
+        public MoviesController(ApplicationDbContext applicationDbContext)
         {
-            _webManifest = webManifest;
+            //_webManifest = webManifest;
             _applicationDbContext = applicationDbContext;
+            _genres = _genres ?? _applicationDbContext.Genres.ToList();
         }
 
         // GET: /<controller>/
         public IActionResult Index()
         {
-            ViewBag.SiteName = _webManifest.Name;
-            ViewBag.Description = _webManifest.Description;
-
             var movies = _applicationDbContext.Movies.Include(m => m.Genre).ToList();
 
             return View(movies);
@@ -45,23 +46,32 @@ namespace Vidly.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Save(Movie movie)
+        public IActionResult Save(MoviesFormViewModel moviesFormViewModel)
         {
-            if (movie.Id == 0)
+            if (!ModelState.IsValid)
+            {
+                moviesFormViewModel.Genres = _genres;
+                return View("MoviesForm", moviesFormViewModel);
+            }
+            
+            
+            if (moviesFormViewModel.Id == 0)
             {
                 // new movie
-                _applicationDbContext.Movies.Add(movie);
+                _applicationDbContext.Movies.Add(Mapper.Map<Movie>(moviesFormViewModel));
             }
             else
             {
-                var movieinDb = _applicationDbContext.Movies.SingleOrDefault(m => m.Id == movie.Id);
-                Mapper.Map(movie, movieinDb);
+                var movieinDb = _applicationDbContext.Movies.SingleOrDefault(m => m.Id == moviesFormViewModel.Id);
+                Mapper.Map(moviesFormViewModel, movieinDb);
             }
 
             _applicationDbContext.SaveChanges();
             
             return RedirectToAction("Index", "Movies");
         }
+
+        
 
         public IActionResult New()
         {
@@ -82,11 +92,8 @@ namespace Vidly.Controllers
             if (movie == null)
                 return NotFound();
 
-            var vm = new MoviesFormViewModel()
-            {
-                Genres = _applicationDbContext.Genres.ToList(),
-                Movie = movie
-            };
+            var vm = Mapper.Map<MoviesFormViewModel>(movie);
+            vm.Genres = _genres;
 
             return View("MoviesForm", vm);
         }

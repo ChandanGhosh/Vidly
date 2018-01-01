@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Vidly.Models;
 using Vidly.Persistance;
+using Vidly.Validators;
 
 namespace Vidly.ViewModels
 {
@@ -21,9 +22,11 @@ namespace Vidly.ViewModels
 
         public bool IsSubscribedToNewsletter { get; set; }
 
+        [Member18Years]
         public DateTime? DateOfBirth { get; set; }
 
         [Display(Name = "Membership Type")]
+        [Required]
         public byte MembershipTypeId { get; set; }
 
         public IEnumerable<MembershipTypeViewModel> MembershipTypes { get; set; } = new List<MembershipTypeViewModel>();
