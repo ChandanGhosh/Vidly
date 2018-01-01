@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Vidly.Models;
 using Vidly.Persistance;
 using Vidly.Services;
+using Vidly.ViewModels;
 using WebEssentials.AspNetCore.Pwa;
 
 namespace Vidly
@@ -35,8 +38,19 @@ namespace Vidly
             services.AddMvc();
 
             services.AddEnvironmentServiceConfigurations(_environment);
-            Mapper.Initialize(config => { 
-                config.CreateMap<Customer, Customer>();
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<Customer, CustomerFormViewModel>()
+                    .ForMember(des => des.MembershipTypes, opt => opt.Ignore()).ReverseMap();
+
+                config.CreateMap<MembershipType, MembershipTypeViewModel>();
+
+                config.CreateMap<MembershipTypeViewModel, MembershipTypeViewModel>();
+
+                config.CreateMap<List<MembershipTypeViewModel>, CustomerFormViewModel>()
+                    .ForMember(dest => dest.MembershipTypes, srcopt => srcopt.MapFrom(src => src))
+                    .ForAllOtherMembers(memberOptions => memberOptions.Ignore());
+                
                 config.CreateMap<Movie, Movie>();
             });
 

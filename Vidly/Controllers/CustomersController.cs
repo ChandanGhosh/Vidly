@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Antiforgery.Internal;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vidly.Models;
@@ -13,21 +14,23 @@ namespace Vidly.Controllers
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
-        private static List<Customer> _customers;
+        private static List<MembershipTypeViewModel> _membershipTypes;
+
 
         public CustomersController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+            _membershipTypes = _membershipTypes ??
+                               dbContext.MembershipTypes.ProjectTo<MembershipTypeViewModel>().ToList();
         }
 
 
         // GET
-        public IActionResult Index()
+        public  IActionResult Index()
         {
-            _customers = _dbContext.Customers.Include(c => c.MembershipType).ToList();
+            var customers = _dbContext.Customers.Include(c => c.MembershipType).ToList();
 
-            return
-                View(_customers);
+            return View(customers);
         }
 
         [Route("Customers/Details/{id:int}")]
@@ -45,43 +48,33 @@ namespace Vidly.Controllers
 
         public IActionResult New()
         {
-            var membershipTypes = _dbContext.MembershipTypes.ToList();
-            var newCustomerViewModel = new CustomerFormViewModel()
-            {
-                MembershipTypes = membershipTypes
-            };
+            var newCustomerViewModel = Mapper.Map<CustomerFormViewModel>(_membershipTypes);
 
             return View("CustomerForm", newCustomerViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Save([Bind(include:"Id, FirstName, LastName,IsSubscribedToNewsletter, MembershipTypeId")] Customer customer)
+        public IActionResult Save(CustomerFormViewModel customerFormViewModel)
         {
             if (!ModelState.IsValid)
             {
-                var vm = new CustomerFormViewModel()
-                {
-                    Customer = customer,
-                    MembershipTypes = _dbContext.MembershipTypes.ToList()
-                };
-
-                return View("CustomerForm", vm);
+                Mapper.Map(_membershipTypes, customerFormViewModel);
+                return View("CustomerForm", customerFormViewModel);
             }
             
-            if (customer.Id == 0)
+            if (customerFormViewModel.Id == 0)
             {
+                var customer = Mapper.Map<Customer>(customerFormViewModel);
+                
                 // new customer
                 _dbContext.Customers.Add(customer);
             }
             else
             {
-                var cust = _dbContext.Customers.Single(c => c.Id == customer.Id);
-                Mapper.Map(customer, cust);
-                
+                var cust = _dbContext.Customers.Single(c => c.Id == customerFormViewModel.Id);
+                Mapper.Map(customerFormViewModel, cust);
             }
-            
-            
             _dbContext.SaveChanges();
             
             return RedirectToAction("Index");
@@ -90,15 +83,12 @@ namespace Vidly.Controllers
         
         public IActionResult Edit(int id)
         {
-            var customer = _dbContext.Customers.SingleOrDefault(c => c.Id == id);
-
+            var customer = _dbContext.Customers.Include(c=> c.MembershipType).SingleOrDefault(c=>c.Id==id);
+                
             if (customer == null) return NotFound();
 
-            var vm = new CustomerFormViewModel()
-            {
-                Customer = customer,
-                MembershipTypes = _dbContext.MembershipTypes.ToList()
-            };
+            var vm = Mapper.Map(_membershipTypes, Mapper.Map<CustomerFormViewModel>(customer));
+            
             
             return View("CustomerForm", vm);
 
