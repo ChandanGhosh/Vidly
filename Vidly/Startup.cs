@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Vidly.Configurations;
+using Vidly.Extensions;
 using Vidly.Models;
 using Vidly.Persistance;
 using Vidly.Services;
@@ -36,8 +38,10 @@ namespace Vidly
             //var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             
             services.AddMvc();
-
+            
             services.AddEnvironmentServiceConfigurations(_environment);
+            services.AddPoCoConfig<ApplicationSettings>(Configuration.GetSection("AppConfig"));
+            
             Mapper.Initialize(config =>
             {
                 config.CreateMap<Customer, CustomerFormViewModel>()

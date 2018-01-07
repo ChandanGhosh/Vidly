@@ -21,9 +21,8 @@ namespace Vidly.Persistance
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<Customer>().Property(c => c.FirstName).IsRequired().HasMaxLength(255);
-            builder.Entity<Customer>().Property(c => c.LastName).IsRequired().HasMaxLength(255);
+            
+            
             builder.Entity<Genre>().Property(c => c.Name).IsRequired().HasMaxLength(20);
             builder.Entity<Movie>().Property(c => c.Name).IsRequired().HasMaxLength(255);
 
